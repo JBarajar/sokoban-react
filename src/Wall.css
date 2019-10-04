@@ -1,0 +1,10 @@
+body {
+    margin: 0;
+}
+
+.Wall {
+    display: flex;
+    width: 30px;
+    height: 30px;
+    border: 1px solid red;
+}
