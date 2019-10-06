@@ -1,11 +1,12 @@
 body {
     margin: 0;
     padding: 0;
+    background-color: black;
 }
 
 .level-container {
     display: flex;
-    width: 200px;
-    height: 150px;
+    width: 312px;
+    height: 260px;
     flex-wrap: wrap;
 }
