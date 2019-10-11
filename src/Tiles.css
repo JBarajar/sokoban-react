@@ -1,0 +1,37 @@
+body {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.tile {
+    box-sizing: border-box;
+    display: flex;
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+}
+
+.box {
+    background-color: brown;
+}
+
+.wall {
+    background-color: gray;
+}
+
+
+.goal {
+    background-color: green;
+}
+
+.boxGoal {
+    background-color: pink;
+}
+
+.floor {
+    background-color: lightgray;
+}
+
+.player {
+    background-color: blue;
+}
