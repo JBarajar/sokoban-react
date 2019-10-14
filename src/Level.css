@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: black;
+    background-color: rgb(44, 43, 43);
     box-sizing: border-box;
 
     font-family: sans-serif, helvetica;
@@ -20,16 +20,16 @@ body {
     width: 100vw;
     color: white;
     justify-content: center;
-    border: 1px solid red;
+    //border: 1px solid red;
 }
 
 .stat-container p {
     display: flex;
-    border:1px solid red;
-    margin: 5px;
+    //border:1px solid red;
+    margin-top: 15px;
 }
 
-.game-over {
+.game-over, .game-won {
     width: 100%;
     text-align: center;
     justify-content: center;

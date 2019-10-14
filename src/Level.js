@@ -12,11 +12,15 @@ class Level extends React.Component {
                     1,0,0,0,0,0,1,
                     1,0,0,5,0,0,1,
                     1,1,1,1,1,1,1],
+            goalPos: [11, 24],
             playerPos: 15,
             levelWidth: 7,
             numMoves: 0,
-            gameOver: false
+            gameOver: false,
+            gameWon: false
         }
+
+        this.origState = Object.assign({}, this.state)
     }
 
     isValidBoxMove(state, boxPos, modifier) {
@@ -31,6 +35,10 @@ class Level extends React.Component {
             if (state.tiles[boxPos] === 5) return false
             else return true
         else return false
+    }
+
+    isGameWon(tiles, goalPos) {
+        return goalPos.every(pos => tiles[pos] === 5)
     }
 
     move(state, modifier) {
@@ -61,7 +69,8 @@ class Level extends React.Component {
                 tiles: newTiles,
                 playerPos: state.playerPos + modifier,
                 numMoves: state.numMoves + 1,
-                gameOver: this.isBoxStuck(this.state, nextBoxTile)
+                gameOver: this.isBoxStuck(state, nextBoxTile),
+                gameWon: this.isGameWon(newTiles, state.goalPos)
             }
         }
     }
@@ -83,17 +92,23 @@ class Level extends React.Component {
     }
 
     handleKeyDown(e) {
-        if (e.key === 'ArrowRight') {
-            this.setState(prevState => this.moveRight(prevState))
+        if (!this.state.gameOver && !this.state.gameWon) {
+            if (e.key === 'ArrowRight') {
+                this.setState(prevState => this.moveRight(prevState))
+            }
+            else if (e.key === 'ArrowLeft') {
+                this.setState(prevState => this.moveLeft(prevState))
+            }
+            else if (e.key === 'ArrowUp') {
+                this.setState(prevState => this.moveUp(prevState))
+            }
+            else if (e.key === 'ArrowDown') {
+                this.setState(prevState => this.moveDown(prevState))
+            }
         }
-        else if (e.key === 'ArrowLeft') {
-            this.setState(prevState => this.moveLeft(prevState))
-        }
-        else if (e.key === 'ArrowUp') {
-            this.setState(prevState => this.moveUp(prevState))
-        }
-        else if (e.key === 'ArrowDown') {
-            this.setState(prevState => this.moveDown(prevState))
+
+        if(e.key === 'r' || e.key === 'R') {
+            this.setState(this.origState)
         }
     }
 
@@ -113,7 +128,8 @@ class Level extends React.Component {
                 </div>
                 <div className='stat-container'>
                     <p>Moves: {this.state.numMoves}</p>
-                    {this.state.gameOver ? <p className='game-over'>Game Over</p> : null}
+                    {this.state.gameOver ? <p className='game-over'>Game Over, Press "R" to restart.</p> : null}
+                    {this.state.gameWon ? <p className='game-won'>Game Won!</p> : null}
                 </div>
             </div>
         )
