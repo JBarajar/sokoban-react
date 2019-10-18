@@ -11,27 +11,31 @@ body {
     border: 1px solid black;
 }
 
-.box {
-    background-color: brown;
-}
-
 .wall {
     background-color: gray;
 }
 
+.player {
+    background-color: blue;
+}
 
-.goal {
+.playerGoal {
     background-color: green;
 }
 
+.box {
+    background-color: brown;
+}
+
 .boxGoal {
-    background-color: pink;
+    background-color: orange;
+}
+
+.goal {
+    background-color: yellow;
 }
 
 .floor {
     background-color: lightgray;
 }
 
-.player {
-    background-color: blue;
-}

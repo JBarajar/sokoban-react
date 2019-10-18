@@ -5,7 +5,16 @@ class Tile extends React.Component {
     constructor() {
         super()
 
-        this.tileTypes = ['floor', 'wall', 'player', 'box', 'goal', 'boxGoal']
+        this.tileTypes = {            
+            '#': 'wall',
+            '@': 'player',
+            '+': 'playerGoal',
+            '$': 'box',
+            '*': 'boxGoal',
+            '.': 'goal',
+            ' ': 'floor'
+            
+        }
     }
 
     render() {
