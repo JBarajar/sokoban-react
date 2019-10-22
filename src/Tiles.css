@@ -8,6 +8,7 @@ body {
     box-sizing: border-box;
     display: flex;
     border: 1px solid black;
+    align-items: flex-start;
 }
 
 .wall {

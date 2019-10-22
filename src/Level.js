@@ -14,12 +14,13 @@ class Level extends React.Component {
             goalPos: props.levelData.original[0].goalPos,
             playerPos: props.levelData.original[0].playerPos,
             levelWidth: props.levelData.original[0].width,
+            levelHeight: props.levelData.original[0].height,
             numMoves: 0,
             gameOver: false,
             gameWon: false
         }
 
-        console.log(this.state.levelWidth)
+        
     }
 
     changeLevel(num) {
@@ -29,6 +30,7 @@ class Level extends React.Component {
             goalPos: this.props.levelData.original[num].goalPos,
             playerPos: this.props.levelData.original[num].playerPos,
             levelWidth: this.props.levelData.original[num].width,
+            levelHeight: this.props.levelData.original[num].height,
             numMoves: 0,
             gameOver: false,
             gameWon: false
@@ -122,6 +124,7 @@ class Level extends React.Component {
                 goalPos: state.goalPos,
                 playerPos: state.playerPos + modifier,
                 levelWidth: state.levelWidth,
+                levelHeight: state.levelHeight,
                 numMoves: state.numMoves + 1,
                 gameWon: this.isGameWon(newTiles, state.goalPos)
             }
@@ -150,15 +153,19 @@ class Level extends React.Component {
     handleKeyDown(e) {
         if (!this.state.gameOver && !this.state.gameWon) {
             if (e.key === 'ArrowRight') {
+                e.preventDefault();
                 this.setState(prevState => this.moveRight(prevState))
             }
             else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
                 this.setState(prevState => this.moveLeft(prevState))
             }
             else if (e.key === 'ArrowUp') {
+                e.preventDefault();
                 this.setState(prevState => this.moveUp(prevState))
             }
             else if (e.key === 'ArrowDown') {
+                e.preventDefault();
                 this.setState(prevState => this.moveDown(prevState))
             }
         }
@@ -183,7 +190,7 @@ class Level extends React.Component {
 
     render() {
         const newTiles = this.state.tiles.map((tile, index) => {
-            return <Tile key={index} tileType={tile} levelWidth={this.state.levelWidth} />
+            return <Tile key={index} tileType={tile} levelWidth={this.state.levelWidth} levelHeight={this.state.levelHeight}/>
         })
 
         return (
@@ -202,10 +209,17 @@ class Level extends React.Component {
                         {this.state.gameOver ? <p className='game-over'>Game Over, Press "R" to restart.</p> : null}
                         {this.state.gameWon ? <p className='game-won'>Game Won!</p> : null}
                     </div>
+                    <div className='desc-container'>
+                        <text>
+                            Objective: Push the red boxes onto the yellow goals<br/><br/>
+                            Controls<br/>
+                            Move - Arrow Keys
+                        </text>
+                    </div>
                 </div>
-                
+
                 <footer>
-                    <p>Created by Joseph Barajar 2019</p>
+                    <p>Created by Joseph Barajar</p>
                 </footer>
             </div>
         )

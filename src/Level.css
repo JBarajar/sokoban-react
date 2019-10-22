@@ -4,15 +4,18 @@ body {
     box-sizing: border-box;
     color: white;
     font-family: sans-serif, helvetica;
+    background-color: rgb(94, 94, 95);
 }
 
 .page-container {
     box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 960px;
     justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
     background-color: rgb(94, 94, 95);
     position: relative;
 }
@@ -22,7 +25,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     align-content: flex-start;
     width: 100%;
     height: 93%;
@@ -34,9 +37,13 @@ body {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+    height: 60vw;
+    align-items: flex-start;
+    align-content: flex-start;
 }
 
 .stat-container {
+    box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -48,13 +55,27 @@ body {
 .stat-container p {
     display: flex;
     align-items: center;
-    margin: 2%;
+    margin-right: 2%;
+    margin-left: 2%;
     
+}
+
+.desc-container {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 2%;
+}
+
+.desc-container text {
+    display: flex;
 }
 
 .game-over, .game-won {
     display: flex;
     width: 100%;
+    justify-content: center;
 }
 
 header {
@@ -77,12 +98,58 @@ footer {
     background-color: black;
     color: white;
     font-size: .8em;
-    position: sticky;
-    bottom: 0;
+    //position: sticky;
+    //bottom: 0;
 }
 
-@media only screen and (min-width: 100vh) {
+@media only screen and (min-width: 768px) {
+    .page-container {
+        width: 100%;
+        height: 968px;
+        align-items: center;
+    }
+    
     .game-container {
-        width: 100vh;
+        width: 100%;
+    }
+
+    .level-container {
+        //height: 50%;
+        width: 80%;
+        padding: 2%;
+    }
+
+    .stat-container {
+        margin-left: 2%;
+        margin-right: 2%;
+    }
+    
+}
+
+@media only screen and (min-width: 968px) {
+    .page-container {
+        height: 1080px;
+        
+    }
+    
+    .game-container {
+        width: 900px;
+        
+    }
+
+    .level-container {
+        height: 50%;
+        width: 80%;
+        padding: 2%;
+    }
+
+    header {
+        width: 900px;
+        border-radius: 15px 15px 0 0;
+    }
+
+    footer {
+        width: 900px;
+        border-radius: 0 0 15px 15px;
     }
 }

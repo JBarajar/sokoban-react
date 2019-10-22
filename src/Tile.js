@@ -20,8 +20,10 @@ class Tile extends React.Component {
     render() {
 
         const className = this.tileTypes[this.props.tileType]
-        const tSize = (1 / this.props.levelWidth) * 100
-        return <div className={`tile ${className}`} style={{width: `${tSize}%`, paddingTop: `${tSize}%`}}></div>
+        let tW = (1 / this.props.levelWidth) * 100
+        let tH = (1 / this.props.levelHeight) * 100
+        
+        return <div className={`tile ${className}`} style={{width: `${tW}%`, height: `${tH}%`}}></div>
     }
 }
 
