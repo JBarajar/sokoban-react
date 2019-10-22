@@ -9,20 +9,40 @@ class Level extends React.Component {
         //console.log(props)
         super(props)
         this.state = {
-            tiles: props.levelData.original[1].level,
-            goalPos: props.levelData.original[1].goalPos,
-            playerPos: props.levelData.original[1].playerPos,
-            levelWidth: props.levelData.original[1].width,
+            currLevel: 0,
+            tiles: props.levelData.original[0].level,
+            goalPos: props.levelData.original[0].goalPos,
+            playerPos: props.levelData.original[0].playerPos,
+            levelWidth: props.levelData.original[0].width,
             numMoves: 0,
             gameOver: false,
             gameWon: false
         }
 
-        
+        console.log(this.state.levelWidth)
     }
 
-    componentDidMount() {
-        
+    changeLevel(num) {
+        this.setState({
+            currLevel: num,
+            tiles: this.props.levelData.original[num].level,
+            goalPos: this.props.levelData.original[num].goalPos,
+            playerPos: this.props.levelData.original[num].playerPos,
+            levelWidth: this.props.levelData.original[num].width,
+            numMoves: 0,
+            gameOver: false,
+            gameWon: false
+        })
+    }
+
+    nextLevel() {
+        const newLevel = this.state.currLevel + 1
+        this.changeLevel(newLevel)
+    }
+
+    prevLevel() {
+        const newLevel = this.state.currLevel - 1
+        if (newLevel >= 0) this.changeLevel(newLevel)
     }
 
     isValidBoxMove(state, boxPos, modifier) {
@@ -42,7 +62,9 @@ class Level extends React.Component {
     }
 
     isGameWon(tiles, goalPos) {
-        return goalPos.every(pos => tiles[pos] === '*')
+        const result = goalPos.every(pos => tiles[pos] === '*')
+        if (result) setTimeout(() => this.nextLevel(), 2000)
+        return result
     }
 
     move(state, modifier) {
@@ -144,6 +166,14 @@ class Level extends React.Component {
         if(e.key === 'r' || e.key === 'R') {
             this.setState(this.state.origState)
         }
+
+        if(e.key === 'e') {
+            this.nextLevel()
+        }
+
+        if(e.key === 'q') {
+            this.prevLevel()
+        }
     }
 
     componentDidMount() {
@@ -157,15 +187,26 @@ class Level extends React.Component {
         })
 
         return (
-            <div className='game-container'>
-                <div className='level-container' id='levelContainer'>
-                    {newTiles}
+            <div className='page-container'>
+                <header>
+                    <p>Sokoban</p>
+                </header>
+
+                <div className='game-container'>
+                    <div className='level-container' id='levelContainer'>
+                        {newTiles}
+                    </div>
+                    <div className='stat-container'>
+                        <p>Moves: {this.state.numMoves}</p>
+                        <p>Level: {this.state.currLevel + 1}</p>
+                        {this.state.gameOver ? <p className='game-over'>Game Over, Press "R" to restart.</p> : null}
+                        {this.state.gameWon ? <p className='game-won'>Game Won!</p> : null}
+                    </div>
                 </div>
-                <div className='stat-container'>
-                    <p>Moves: {this.state.numMoves}</p>
-                    {this.state.gameOver ? <p className='game-over'>Game Over, Press "R" to restart.</p> : null}
-                    {this.state.gameWon ? <p className='game-won'>Game Won!</p> : null}
-                </div>
+                
+                <footer>
+                    <p>Created by Joseph Barajar 2019</p>
+                </footer>
             </div>
         )
     }
