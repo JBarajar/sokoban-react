@@ -7,35 +7,42 @@ body {
 .tile {
     box-sizing: border-box;
     display: flex;
-    border: 1px solid black;
+    //border: 1px solid black;
     align-items: flex-start;
 }
 
 .wall {
-    background-color: gray;
+    background-color: black;
+    border: 1px solid white;
 }
 
 .player {
-    background-color: blue;
+    background-color: white;
+    border: 5px solid black;
 }
 
 .playerGoal {
-    background-color: green;
+    background-color: white;
+    border: 5px solid black;
 }
 
 .box {
-    background-color: brown;
+    background-color: white;
+    outline: 3px solid black;
+    outline-offset: -7px;
 }
 
 .boxGoal {
-    background-color: orange;
+    background-color: white;
 }
 
 .goal {
-    background-color: yellow;
+    background-color: black;
+    outline: 3px solid white;
+    outline-offset: -7px;
 }
 
 .floor {
-    background-color: lightgray;
+    background-color: black;
 }
 

@@ -1,7 +1,11 @@
 import React from 'react'
+import Hammer from 'react-hammerjs'
 
 import Tile from './Tile.js'
+import LevelSelect from './LevelSelect.js'
 import './Level.css'
+
+import Footer from './Footer.js'
 
 
 class Level extends React.Component {
@@ -9,6 +13,8 @@ class Level extends React.Component {
         //console.log(props)
         super(props)
         this.state = {
+            levelData: props.levelData,
+            numLevels: props.levelData.original.numLevels,
             currLevel: 0,
             tiles: props.levelData.original[0].level,
             goalPos: props.levelData.original[0].goalPos,
@@ -19,22 +25,23 @@ class Level extends React.Component {
             gameOver: false,
             gameWon: false
         }
-
-        
     }
 
     changeLevel(num) {
+        console.log(num)
         this.setState({
             currLevel: num,
-            tiles: this.props.levelData.original[num].level,
-            goalPos: this.props.levelData.original[num].goalPos,
-            playerPos: this.props.levelData.original[num].playerPos,
-            levelWidth: this.props.levelData.original[num].width,
-            levelHeight: this.props.levelData.original[num].height,
+            tiles: this.state.levelData.original[num].level,
+            goalPos: this.state.levelData.original[num].goalPos,
+            playerPos: this.state.levelData.original[num].playerPos,
+            levelWidth: this.state.levelData.original[num].width,
+            levelHeight: this.state.levelData.original[num].height,
             numMoves: 0,
             gameOver: false,
             gameWon: false
         })
+
+        this.setState({origState: {...this.state}})
     }
 
     nextLevel() {
@@ -45,6 +52,11 @@ class Level extends React.Component {
     prevLevel() {
         const newLevel = this.state.currLevel - 1
         if (newLevel >= 0) this.changeLevel(newLevel)
+    }
+
+    resetLevel() {
+        this.setState(this.state.origState)
+        this.setState({origState: Object.assign({}, this.state)})
     }
 
     isValidBoxMove(state, boxPos, modifier) {
@@ -150,6 +162,10 @@ class Level extends React.Component {
         return this.move(state, state.levelWidth)
     }
 
+    handleChange(e) {
+        //this.changeLevel(e.target.value)
+    }
+
     handleKeyDown(e) {
         if (!this.state.gameOver && !this.state.gameWon) {
             if (e.key === 'ArrowRight') {
@@ -171,7 +187,7 @@ class Level extends React.Component {
         }
 
         if(e.key === 'r' || e.key === 'R') {
-            this.setState(this.state.origState)
+            this.resetLevel()
         }
 
         if(e.key === 'e') {
@@ -180,6 +196,28 @@ class Level extends React.Component {
 
         if(e.key === 'q') {
             this.prevLevel()
+        }
+    }
+
+    handleSwipe(e) {
+        //console.log(e.direction)
+        if (e.direction === 2) { //left swipe
+            console.log('left')
+            this.setState(prevState => this.moveLeft(prevState))
+        }
+
+        if (e.direction === 4) { //right swipe
+            console.log('right')
+            this.setState(prevState => this.moveRight(prevState))
+        }
+
+        if (e.direction === 8) { //up swipe
+            console.log('up')
+            this.setState(prevState => this.moveUp(prevState))
+        }
+
+        if (e.direction === 16) { //down swipe
+            this.setState(prevState => this.moveDown(prevState))
         }
     }
 
@@ -200,27 +238,35 @@ class Level extends React.Component {
                 </header>
 
                 <div className='game-container'>
-                    <div className='level-container' id='levelContainer'>
-                        {newTiles}
-                    </div>
-                    <div className='stat-container'>
-                        <p>Moves: {this.state.numMoves}</p>
-                        <p>Level: {this.state.currLevel + 1}</p>
-                        {this.state.gameOver ? <p className='game-over'>Game Over, Press "R" to restart.</p> : null}
-                        {this.state.gameWon ? <p className='game-won'>Game Won!</p> : null}
-                    </div>
+                    <Hammer onSwipe={event => this.handleSwipe(event)} direction='DIRECTION_ALL'>
+                            <div className='level-container'>
+                                <div className='padding-box' id='levelContainer'>
+                                    {newTiles}
+                                </div>
+                            </div>
+                    </Hammer>
+
+                    
+                    <Hammer onSwipe={event => this.handleSwipe(event)} direction='DIRECTION_ALL'>
+                        <div className='stat-container'>
+                            <p>Moves: {this.state.numMoves}</p>
+                            <p>Level: {this.state.currLevel + 1}</p>
+                            <LevelSelect currLevel={this.state.currLevel} numLevels={this.state.numLevels} changeLevel={this.changeLevel.bind(this)} nextLevel={this.nextLevel.bind(this)} prevLevel={this.prevLevel.bind(this)}/>
+                            {this.state.gameOver ? <p className='game-over'>Game Over, Press "R" to restart.</p> : null}
+                            {this.state.gameWon ? <p className='game-won'>Game Won!</p> : null}
+                        </div>
+                    </Hammer>
+                    
                     <div className='desc-container'>
-                        <text>
-                            Objective: Push the red boxes onto the yellow goals<br/><br/>
-                            Controls<br/>
-                            Move - Arrow Keys
-                        </text>
+                        Objective: Push all the boxes into the goals<br/><br/>
+                        Controls<br/>
+                        Move: Arrow Keys or Swipe<br/>
+                        Restart: R<br/><br/>
                     </div>
+                    
                 </div>
 
-                <footer>
-                    <p>Created by Joseph Barajar</p>
-                </footer>
+                <Footer />
             </div>
         )
     }

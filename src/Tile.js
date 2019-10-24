@@ -1,7 +1,7 @@
 import React from 'react'
 import './Tiles.css'
 
-class Tile extends React.Component {
+class Tile extends React.PureComponent {
     constructor() {
         super()
 
@@ -18,7 +18,6 @@ class Tile extends React.Component {
     }
 
     render() {
-
         const className = this.tileTypes[this.props.tileType]
         let tW = (1 / this.props.levelWidth) * 100
         let tH = (1 / this.props.levelHeight) * 100

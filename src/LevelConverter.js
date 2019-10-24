@@ -61,6 +61,7 @@ export function convertToJSON(levelData) {
     let newLevelData = {'original': []}
 
     let levels = splitLevels(levelData)
+    let numLevels = levels.length
     
     //console.log(newLevelData)
     for( let level of levels) {
@@ -69,6 +70,8 @@ export function convertToJSON(levelData) {
         newLevelData.original.push(newLevel)
 
     }
+
+    newLevelData.original.numLevels = numLevels
 
     return newLevelData
 }
