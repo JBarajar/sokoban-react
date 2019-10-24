@@ -28,7 +28,7 @@ class Level extends React.Component {
     }
 
     changeLevel(num) {
-        console.log(num)
+        if(num >= this.state.numLevels || num < 0) return
         this.setState({
             currLevel: num,
             tiles: this.state.levelData.original[num].level,
@@ -46,7 +46,7 @@ class Level extends React.Component {
 
     nextLevel() {
         const newLevel = this.state.currLevel + 1
-        this.changeLevel(newLevel)
+        if (newLevel < this.state.numLevels) this.changeLevel(newLevel)
     }
 
     prevLevel() {
@@ -56,7 +56,7 @@ class Level extends React.Component {
 
     resetLevel() {
         this.setState(this.state.origState)
-        this.setState({origState: Object.assign({}, this.state)})
+        this.setState({origState: {...this.state}})
     }
 
     isValidBoxMove(state, boxPos, modifier) {
@@ -88,7 +88,7 @@ class Level extends React.Component {
 
         if(nextTile === '#') return
 
-        let newTiles = Object.assign([], state.tiles)
+        let newTiles = [...state.tiles]
         
         if(nextTile === ' ') {
             newTiles[nextPos] = '@'
@@ -162,10 +162,6 @@ class Level extends React.Component {
         return this.move(state, state.levelWidth)
     }
 
-    handleChange(e) {
-        //this.changeLevel(e.target.value)
-    }
-
     handleKeyDown(e) {
         if (!this.state.gameOver && !this.state.gameWon) {
             if (e.key === 'ArrowRight') {
@@ -200,7 +196,6 @@ class Level extends React.Component {
     }
 
     handleSwipe(e) {
-        //console.log(e.direction)
         if (e.direction === 2) { //left swipe
             console.log('left')
             this.setState(prevState => this.moveLeft(prevState))
@@ -223,7 +218,7 @@ class Level extends React.Component {
 
     componentDidMount() {
         document.addEventListener('keydown', this.handleKeyDown.bind(this))
-        this.setState({origState: Object.assign({}, this.state)})
+        this.setState({origState: {...this.state}})
     }
 
     render() {

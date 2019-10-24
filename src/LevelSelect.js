@@ -8,25 +8,18 @@ class LevelSelect extends React.Component {
             currLevel: props.currLevel,
             value: props.currLevel + 1
         }
-
-        console.log(props.numLevels)
     }
 
     handleChange(e) {
-        console.log('change')
         this.setState({value: e.target.value})
-        //console.log('change')
     }
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log('submit')
         this.props.changeLevel(Number(this.state.value - 1))
-        
     }
 
     static getDerivedStateFromProps(props, state) {
-        console.log('gdsfp')
         if(props.currLevel !== state.currLevel) {
             return {
                 currLevel: props.currLevel,
@@ -43,7 +36,7 @@ class LevelSelect extends React.Component {
                 
                 <form onSubmit={e => this.handleSubmit(e)}>
                     <label>Level</label>
-                    <input className='level-field' type='number' max={this.props.numLevels} value={this.state.value} onChange={event => this.handleChange(event)}></input>
+                    <input className='level-field' type='number' min='0' max={this.props.numLevels} value={this.state.value} onChange={event => this.handleChange(event)}></input>
                 </form>
                     
                 <button className='next-button' onClick={() => this.props.nextLevel()}>&rarr;</button>
