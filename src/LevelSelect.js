@@ -33,11 +33,26 @@ class LevelSelect extends React.Component {
         return (
             <div className='level-select'>
                 <button className='prev-button' onClick={() => this.props.prevLevel()}>&larr;</button>
+
+                <div className='level-field'>
+                    <p className='level-label'>Level:</p>
+                    <div className='numeber-box'>
+                        <form onSubmit={e => this.handleSubmit(e)}>
+                            <input 
+                                className='level-input' 
+                                type='number' 
+                                min='0' 
+                                max={this.props.numLevels} 
+                                value={this.state.value} 
+                                onChange={event => this.handleChange(event)}>
+                            </input>
+                        </form>
+                        <p>/{this.props.numLevels}</p>
+                    </div>
+                </div>
+                    
+
                 
-                <form onSubmit={e => this.handleSubmit(e)}>
-                    <label>Level</label>
-                    <input className='level-field' type='number' min='0' max={this.props.numLevels} value={this.state.value} onChange={event => this.handleChange(event)}></input>
-                </form>
                     
                 <button className='next-button' onClick={() => this.props.nextLevel()}>&rarr;</button>
             </div>

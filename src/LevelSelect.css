@@ -1,5 +1,11 @@
-.level-field {
-    width: 20px;
+
+
+.level-input::-webkit-inner-spin-button, 
+.level-input::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+}
+
+.level-input {
     -webkit-appearance: textfield;
     -moz-appearance: textfield;
     appearance: textfield;
@@ -8,24 +14,44 @@
     border: 1px solid white;
 }
 
-.level-field::-webkit-inner-spin-button, 
-.level-field::-webkit-outer-spin-button { 
-    -webkit-appearance: none;
-}
-
 .level-field {
     display: flex;
+    border: 1px solid blue;
+}
+
+.number-box {
+    display: flex;
+}
+
+.level-select form {
+    display: flex;
+    width: 10%;
+
+    border: 1px solid red;
+}
+
+.level-label {
+    width: 100%;
+}
+
+.level-select p {
+    display: flex;
+    width: 50%;
+    border: 1px solid orange;
 }
 
 .level-select {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    border: 1px solid green;
 }
 
-.prev-button {
+.prev-button, .next-button {
     display: flex;
-}
-
-.next-button {
-    display: flex;
+    background-color: black;
+    color: white;
+    height: 50%;
 }
 
