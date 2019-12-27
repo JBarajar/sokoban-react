@@ -10,27 +10,28 @@ import Footer from './Footer.js'
 
 class Level extends React.Component {
     constructor(props) {
-        //console.log(props)
         super(props)
         this.state = {
             levelData: props.levelData,
             numLevels: props.levelData.original.numLevels,
             currLevel: 0,
-            tiles: props.levelData.original[0].level,
-            goalPos: props.levelData.original[0].goalPos,
-            playerPos: props.levelData.original[0].playerPos,
-            levelWidth: props.levelData.original[0].width,
-            levelHeight: props.levelData.original[0].height,
-            numMoves: 0,
-            gameOver: false,
-            gameWon: false
+            level: {
+                tiles: props.levelData.original[0].level,
+                goalPos: props.levelData.original[0].goalPos,
+                playerPos: props.levelData.original[0].playerPos,
+                levelWidth: props.levelData.original[0].width,
+                levelHeight: props.levelData.original[0].height,
+                numMoves: 0,
+                gameOver: false,
+                gameWon: false
+            }
         }
     }
 
     changeLevel(num) {
         if(num >= this.state.numLevels || num < 0) return
-        this.setState({
-            currLevel: num,
+
+        let newLevel = {
             tiles: this.state.levelData.original[num].level,
             goalPos: this.state.levelData.original[num].goalPos,
             playerPos: this.state.levelData.original[num].playerPos,
@@ -39,24 +40,27 @@ class Level extends React.Component {
             numMoves: 0,
             gameOver: false,
             gameWon: false
-        })
+        }
 
-        this.setState({origState: {...this.state}})
+        this.setState({
+            currLevel: num,
+            level: newLevel,
+            origState: newLevel
+        })
     }
 
     nextLevel() {
         const newLevel = this.state.currLevel + 1
-        if (newLevel < this.state.numLevels) this.changeLevel(newLevel)
+        this.changeLevel(newLevel)
     }
 
     prevLevel() {
         const newLevel = this.state.currLevel - 1
-        if (newLevel >= 0) this.changeLevel(newLevel)
+        this.changeLevel(newLevel)
     }
 
     resetLevel() {
-        this.setState(this.state.origState)
-        this.setState({origState: {...this.state}})
+        this.setState({level: this.state.origState})
     }
 
     isValidBoxMove(state, boxPos, modifier) {
@@ -82,6 +86,7 @@ class Level extends React.Component {
     }
 
     move(state, modifier) {
+        let newState = {...state}
         const currTile = state.tiles[state.playerPos]
         const nextPos = state.playerPos + modifier
         const nextTile = state.tiles[nextPos]
@@ -95,10 +100,12 @@ class Level extends React.Component {
             if (currTile === '@') newTiles[state.playerPos] = ' '
             else if (currTile === '+') newTiles[state.playerPos] = '.'
 
+            newState.tiles = newTiles
+            newState.playerPos = state.playerPos + modifier
+            newState.numMoves = state.numMoves + 1
+
             return {
-                tiles: newTiles,
-                playerPos: state.playerPos + modifier,
-                numMoves: state.numMoves + 1,
+                level: newState
             }
         }
 
@@ -107,10 +114,12 @@ class Level extends React.Component {
             if (currTile === '@') newTiles[state.playerPos] = ' '
             else if (currTile === '+') newTiles[state.playerPos] = '.'
 
+            newState.tiles = newTiles
+            newState.playerPos = state.playerPos + modifier
+            newState.numMoves = state.numMoves + 1
+
             return {
-                tiles: newTiles,
-                playerPos: state.playerPos + modifier,
-                numMoves: state.numMoves + 1,
+                level: newState
             }
         }
         
@@ -142,7 +151,7 @@ class Level extends React.Component {
             }
 
             newState.gameOver = this.isBoxStuck(newState, nextBoxPos)
-            return newState
+            return {level: newState}
         }
     }
 
@@ -155,6 +164,7 @@ class Level extends React.Component {
     }
 
     moveUp(state) {
+        console.log(state.levelWidth)
         return this.move(state, -state.levelWidth)
     }
 
@@ -163,22 +173,22 @@ class Level extends React.Component {
     }
 
     handleKeyDown(e) {
-        if (!this.state.gameOver && !this.state.gameWon) {
+        if (!this.state.level.gameOver && !this.state.level.gameWon) {
             if (e.key === 'ArrowRight') {
                 e.preventDefault();
-                this.setState(prevState => this.moveRight(prevState))
+                this.setState(prevState => this.moveRight(prevState.level))
             }
             else if (e.key === 'ArrowLeft') {
                 e.preventDefault();
-                this.setState(prevState => this.moveLeft(prevState))
+                this.setState(prevState => this.moveLeft(prevState.level))
             }
             else if (e.key === 'ArrowUp') {
                 e.preventDefault();
-                this.setState(prevState => this.moveUp(prevState))
+                this.setState(prevState => this.moveUp(prevState.level))
             }
             else if (e.key === 'ArrowDown') {
                 e.preventDefault();
-                this.setState(prevState => this.moveDown(prevState))
+                this.setState(prevState => this.moveDown(prevState.level))
             }
         }
 
@@ -218,12 +228,13 @@ class Level extends React.Component {
 
     componentDidMount() {
         document.addEventListener('keydown', this.handleKeyDown.bind(this))
-        this.setState({origState: {...this.state}})
+        this.setState({origState: {...this.state.level}})
+        
     }
 
     render() {
-        const newTiles = this.state.tiles.map((tile, index) => {
-            return <Tile key={index} tileType={tile} levelWidth={this.state.levelWidth} levelHeight={this.state.levelHeight}/>
+        const newTiles = this.state.level.tiles.map((tile, index) => {
+            return <Tile key={index} tileType={tile} levelWidth={this.state.level.levelWidth} levelHeight={this.state.level.levelHeight}/>
         })
 
         return (
@@ -246,7 +257,12 @@ class Level extends React.Component {
                         <div className='stat-container'>
                             <p>Moves: {this.state.numMoves}</p>
                             <p>Level: {this.state.currLevel + 1}</p>
-                            <LevelSelect currLevel={this.state.currLevel} numLevels={this.state.numLevels} changeLevel={this.changeLevel.bind(this)} nextLevel={this.nextLevel.bind(this)} prevLevel={this.prevLevel.bind(this)}/>
+                            <LevelSelect currLevel={this.state.currLevel} 
+                                         numLevels={this.state.numLevels} 
+                                         changeLevel={this.changeLevel.bind(this)} 
+                                         nextLevel={this.nextLevel.bind(this)} 
+                                         prevLevel={this.prevLevel.bind(this)}
+                            />
                             {this.state.gameOver ? <p className='game-over'>Game Over, Press "R" to restart.</p> : null}
                             {this.state.gameWon ? <p className='game-won'>Game Won!</p> : null}
                         </div>

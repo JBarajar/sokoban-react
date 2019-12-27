@@ -26,7 +26,9 @@ class App extends React.Component {
     render() {
         return (
             <div className='App'>
-                {this.state.loading ? <p></p> : <Level levelData={this.state.levelData}/>}
+                {
+                    this.state.loading ? <p>Loading...</p> : <Level levelData={this.state.levelData}/>
+                }
             </div> 
         ) 
     }

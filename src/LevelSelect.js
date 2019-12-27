@@ -54,7 +54,7 @@ class LevelSelect extends React.Component {
 
                 
                     
-                <button className='next-button' onClick={() => this.props.nextLevel()}>&rarr;</button>
+                <button className='next-button' onClick={() => this.props.nextLevel()}> &rarr;</button>
             </div>
         )
         

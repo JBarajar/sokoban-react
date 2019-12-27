@@ -1,7 +1,7 @@
 //Converts text files from http://www.sourcecode.se/sokoban/levels to JSON
 
 function splitLevels(levels) {
-    let newLevels = levels.split('\n\n')
+    let newLevels = levels.split("\n\r\n")
     newLevels = newLevels.filter(string => string.length > 0)
     return newLevels
 }
@@ -72,7 +72,6 @@ export function convertToJSON(levelData) {
     }
 
     newLevelData.original.numLevels = numLevels
-
     return newLevelData
 }
 
