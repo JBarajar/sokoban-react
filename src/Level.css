@@ -80,7 +80,6 @@ body {
     align-items: center;
     margin-right: 2%;
     margin-left: 2%;
-    
 }
 
 .desc-container {
@@ -101,6 +100,13 @@ body {
     display: flex;
     width: 100%;
     justify-content: center;
+}
+
+.reset {
+    display: flex;
+    background-color: black;
+    color: white;
+    margin-left: 2%;
 }
 
 header {

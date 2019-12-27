@@ -5,6 +5,25 @@
     -webkit-appearance: none;
 }
 
+.level-select {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.level-field {
+    display: flex;
+    flex-direction: row;
+    padding-right: 5px;
+}
+
+.number-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
 .level-input {
     -webkit-appearance: textfield;
     -moz-appearance: textfield;
@@ -12,40 +31,12 @@
     background-color: black;
     color: white;
     border: 1px solid white;
-}
-
-.level-field {
-    display: flex;
-    border: 1px solid blue;
-}
-
-.number-box {
-    display: flex;
-}
-
-.level-select form {
-    display: flex;
-    width: 10%;
-
-    border: 1px solid red;
-}
-
-.level-label {
-    width: 100%;
+    text-align: right;
+    width: 20px;
 }
 
 .level-select p {
     display: flex;
-    width: 50%;
-    border: 1px solid orange;
-}
-
-.level-select {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 20%;
-    border: 1px solid green;
 }
 
 .prev-button, .next-button {

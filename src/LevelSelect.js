@@ -36,7 +36,7 @@ class LevelSelect extends React.Component {
 
                 <div className='level-field'>
                     <p className='level-label'>Level:</p>
-                    <div className='numeber-box'>
+                    <div className='number-box'>
                         <form onSubmit={e => this.handleSubmit(e)}>
                             <input 
                                 className='level-input' 

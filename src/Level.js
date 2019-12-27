@@ -208,21 +208,21 @@ class Level extends React.Component {
     handleSwipe(e) {
         if (e.direction === 2) { //left swipe
             console.log('left')
-            this.setState(prevState => this.moveLeft(prevState))
+            this.setState(prevState => this.moveLeft(prevState.level))
         }
 
         if (e.direction === 4) { //right swipe
             console.log('right')
-            this.setState(prevState => this.moveRight(prevState))
+            this.setState(prevState => this.moveRight(prevState.level))
         }
 
         if (e.direction === 8) { //up swipe
             console.log('up')
-            this.setState(prevState => this.moveUp(prevState))
+            this.setState(prevState => this.moveUp(prevState.level))
         }
 
         if (e.direction === 16) { //down swipe
-            this.setState(prevState => this.moveDown(prevState))
+            this.setState(prevState => this.moveDown(prevState.level))
         }
     }
 
@@ -255,16 +255,16 @@ class Level extends React.Component {
                     
                     <Hammer onSwipe={event => this.handleSwipe(event)} direction='DIRECTION_ALL'>
                         <div className='stat-container'>
-                            <p>Moves: {this.state.numMoves}</p>
-                            <p>Level: {this.state.currLevel + 1}</p>
+                            <p>Moves: {this.state.level.numMoves}</p>
                             <LevelSelect currLevel={this.state.currLevel} 
                                          numLevels={this.state.numLevels} 
                                          changeLevel={this.changeLevel.bind(this)} 
                                          nextLevel={this.nextLevel.bind(this)} 
                                          prevLevel={this.prevLevel.bind(this)}
                             />
-                            {this.state.gameOver ? <p className='game-over'>Game Over, Press "R" to restart.</p> : null}
-                            {this.state.gameWon ? <p className='game-won'>Game Won!</p> : null}
+                            <button className='reset' onClick={() => this.resetLevel()}>Reset</button>
+                            {this.state.level.gameOver ? <p className='game-over'>Game Over, Press "Reset" to try again.</p> : null}
+                            {this.state.level.gameWon ? <p className='game-won'>Game Won!</p> : null}
                         </div>
                     </Hammer>
                     
