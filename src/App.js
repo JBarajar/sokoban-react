@@ -1,7 +1,6 @@
 import React from 'react'
 import Level from './Level.js'
 import './App.css'
-import {convertToJSON} from './LevelConverter.js'
 
 class App extends React.Component {
     constructor() {
@@ -13,11 +12,11 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        fetch('Original.txt')
+        fetch('Original.json')
             .then(res => res.text())
             .then(text => {
                 this.setState( {
-                    levelData: convertToJSON(text),
+                    levelData: JSON.parse(text),
                     loading: false
                 })
             })

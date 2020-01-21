@@ -13,7 +13,7 @@ class Level extends React.Component {
         super(props)
         this.state = {
             levelData: props.levelData,
-            numLevels: props.levelData.original.numLevels,
+            numLevels: props.levelData.original.length,
             currLevel: 0,
             level: {
                 tiles: props.levelData.original[0].level,
