@@ -12,7 +12,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        fetch('Original.json')
+        fetch('Sokoban_Junior_1.json')
             .then(res => res.text())
             .then(text => {
                 this.setState( {
