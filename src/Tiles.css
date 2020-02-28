@@ -13,35 +13,42 @@ body {
 
 .wall {
     background-color: black;
-    border: 1px solid white;
+    border: 1px solid #EEEEEE;
 }
 
 .player {
-    background-color: white;
-    border: 5px solid black;
+    background-color: #EEEEEE;
+    border: 6px solid black;
+    border-radius: 50%;
 }
 
 .playerGoal {
-    background-color: white;
-    border: 5px solid black;
+    background-color: #EEEEEE;
+    border: 6px solid black;
+    outline: 3px solid #EEEEEE;
+    border-radius: 50%;
+    outline-offset: -9px;
 }
 
 .box {
-    background-color: white;
+    background-color: #EEEEEE;
     border: 1px solid black;
+    border-radius: 15%;
     outline: 3px solid black;
-    outline-offset: -7px;
+    outline-offset: -9px;
+    
 }
 
 .boxGoal {
-    background-color: white;
-    border: 1px solid black;
+    background-color: #EEEEEE;
+    border: 2px solid black;
+    border-radius: 15%;
 }
 
 .goal {
     background-color: black;
-    outline: 3px solid white;
-    outline-offset: -7px;
+    outline: 3px solid #EEEEEE;
+    outline-offset: -9px;
 }
 
 .floor {
