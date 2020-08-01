@@ -1,10 +1,14 @@
+:root {
+    --level-width: 0;
+    --level-height: 0;
+}
+
 body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     color: #EEEEEE;
     font-family: sans-serif, helvetica;
-    height: 100vh;
     background-color: black;
 }
 
@@ -13,15 +17,14 @@ body {
     box-sizing: border-box;
 
     display: flex;
-    //flex-wrap: wrap;
+    flex: 1;
     flex-direction: column;
     align-items: center;
 
     width: 100%;
     height: 100vh;
-    //min-height: 768px;
+    min-height: 600px;
     
-    //background-color: rgb(94, 94, 95);
     background-color: black;
 }
 
@@ -30,6 +33,7 @@ body {
     box-sizing: border-box;
 
     display: flex;
+    flex: 1;
     flex-wrap: wrap;
     justify-content: center;
     align-items: flex-start;
@@ -37,32 +41,27 @@ body {
 
     width: 100%;
     flex: 1;
-    
-    //background-color: rgb(67, 67, 68);
+
     border: 1px solid #EEEEEE;
 }
 
 .level-container {
-    box-sizing: border-box;
+    margin-top: 10px;
     display: flex;
-    flex-wrap: wrap;
-    position: relative;
+    justify-content: center;
     width: 100%;
-    padding-bottom: 75%;
-    align-items: flex-start;
-    align-content: flex-start;
-    //border: 2px solid white;
+    min-height: 50%;
+    
 }
 
-.padding-box {
-    position:absolute;
-    width: 100%;
-    height: 100%;
+.level-grid {
     box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    align-content: flex-start;
+    display: grid;
+    grid-template-columns: repeat(var(--level-width), 1fr);
+    grid-template-rows: repeat(var(--level-height), 1fr);
+    max-width: 80%;
+    border: 1px solid white;
+    margin: auto;
 }
 
 .stat-container {
@@ -146,9 +145,8 @@ footer {
         width: 768px;
     }
 
-    .level-container {
-        border: 2px solid #EEEEEE;
-        margin: 2%;
+    .level-grid {
+        
     }
 
     header {

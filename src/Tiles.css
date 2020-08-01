@@ -5,10 +5,7 @@ body {
 }
 
 .tile {
-    box-sizing: border-box;
-    display: flex;
-    //border: 1px solid black;
-    align-items: flex-start;
+    width: 100%;
 }
 
 .wall {
@@ -18,7 +15,7 @@ body {
 
 .player {
     background-color: #EEEEEE;
-    border: 6px solid black;
+    //border: 6px solid black;
     border-radius: 50%;
 }
 
