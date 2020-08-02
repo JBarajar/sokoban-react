@@ -233,39 +233,44 @@ class Level extends React.Component {
         const newTiles = this.state.level.tiles.map((tile, index) => {
             return <Tile key={index} tileType={tile} levelWidth={this.state.level.levelWidth} levelHeight={this.state.level.levelHeight}/>
         })
+        console.log(this.state.levelWidth);
+        document.documentElement.style.setProperty('--level-width', this.state.level.levelWidth)
+        document.documentElement.style.setProperty('--level-height', this.state.level.levelHeight)
 
         return (
             <div className='page-container'>
-                <header>
-                    <p>Sokoban</p>
-                </header>
+                
 
                 <div className='game-container'>
+                    {/*Stat container and level select*/}
+                    <div className='stat-container'>
+                        <p className='move-counter'>Moves: {this.state.level.numMoves}</p>
+                        <LevelSelect className='level-select' currLevel={this.state.currLevel} 
+                                        numLevels={this.state.numLevels} 
+                                        changeLevel={this.changeLevel.bind(this)} 
+                                        nextLevel={this.nextLevel.bind(this)} 
+                                        prevLevel={this.prevLevel.bind(this)}
+                        />
+                        <button className='reset' onClick={() => this.resetLevel()}>Reset</button>
+                    </div>
+
+                    {this.state.level.gameOver ? <p className='game-over'>Game Over! Press "Reset" to try again.</p> : null}
+                    {this.state.level.gameWon ? <p className='game-won'>Level Complete!</p> : null}
+
                     {/*Game board*/}
                     <Hammer onSwipe={event => this.handleSwipe(event)} direction='DIRECTION_ALL'>
-                            <div className='level-container'>
-                                <div className='padding-box' id='levelContainer'>
-                                    {newTiles}
-                                </div>
+                        <div className='level-container'>
+                            <div className='level-grid'>
+                                {newTiles}
                             </div>
+                        </div>
+                            
                     </Hammer>
 
-                    {/*Stat container and level select*/}
-                    <Hammer onSwipe={event => this.handleSwipe(event)} direction='DIRECTION_ALL'>
-                        <div className='stat-container'>
-                            <p>Moves: {this.state.level.numMoves}</p>
-                            <LevelSelect currLevel={this.state.currLevel} 
-                                         numLevels={this.state.numLevels} 
-                                         changeLevel={this.changeLevel.bind(this)} 
-                                         nextLevel={this.nextLevel.bind(this)} 
-                                         prevLevel={this.prevLevel.bind(this)}
-                            />
-                            <button className='reset' onClick={() => this.resetLevel()}>Reset</button>
-                            {this.state.level.gameOver ? <p className='game-over'>Game Over, Press "Reset" to try again.</p> : null}
-                            {this.state.level.gameWon ? <p className='game-won'>Level Complete!</p> : null}
-                        </div>
-                    </Hammer>
-                    
+                    <header>
+                        <p>Sokoban</p>
+                    </header>
+
                     <div className='desc-container'>
                         Objective: Push all the boxes into the goals<br/><br/>
                         Controls<br/>
