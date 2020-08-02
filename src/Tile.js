@@ -8,26 +8,22 @@ import boxGoal from './img/boxGoal.png'
 import goal from './img/goal.png'
 import floor from './img/floor.png'
 
-class Tile extends React.PureComponent {
-    constructor() {
-        super()
-
-        this.tileTypes = {            
-            '#': wall,
-            '@': player,
-            '+': playerGoal,
-            '$': box,
-            '*': boxGoal,
-            '.': goal,
-            ' ': floor
-            
-        }
+function Tile(props) {
+    const tileTypes = {            
+        '#': wall,
+        '@': player,
+        '+': playerGoal,
+        '$': box,
+        '*': boxGoal,
+        '.': goal,
+        ' ': floor
     }
 
-    render() {
-        const className = this.tileTypes[this.props.tileType]
-        return (<img className='tile' src={className} />);
-    }
+    const className = tileTypes[props.tileType]
+
+    return (
+        <img alt='' className='tile' src={className} />
+    )
 }
 
 export default Tile
