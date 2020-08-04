@@ -1,7 +1,7 @@
 import React from 'react'
 import Hammer from 'react-hammerjs'
 
-import Tile from './Tile.js'
+import Tile from './Tile/Tile.js'
 import LevelSelect from './LevelSelect.js'
 import './Level.css'
 
@@ -233,7 +233,6 @@ class Level extends React.Component {
         const newTiles = this.state.level.tiles.map((tile, index) => {
             return <Tile key={index} tileType={tile} levelWidth={this.state.level.levelWidth} levelHeight={this.state.level.levelHeight}/>
         })
-        console.log(this.state.levelWidth);
         document.documentElement.style.setProperty('--level-width', this.state.level.levelWidth)
         document.documentElement.style.setProperty('--level-height', this.state.level.levelHeight)
 
