@@ -1,288 +1,244 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import Hammer from 'react-hammerjs'
-
-import Tile from './Tile/Tile.js'
+import TileBoard from './TileBoard/TileBoard.js'
 import LevelSelect from './LevelSelect.js'
 import './Level.css'
 
 import Footer from './Footer.js'
 
+import * as data from './levels'
 
-class Level extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            levelData: props.levelData,
-            numLevels: props.levelData.original.length,
-            currLevel: 0,
-            level: {
-                tiles: props.levelData.original[0].level,
-                goalPos: props.levelData.original[0].goalPos,
-                playerPos: props.levelData.original[0].playerPos,
-                levelWidth: props.levelData.original[0].width,
-                levelHeight: props.levelData.original[0].height,
-                numMoves: 0,
-                gameOver: false,
-                gameWon: false
-            }
-        }
-    }
+function Level() {
+    const [levelSet, changeLevelSet] = useState({
+        levels: data.original,
+        total: data.original.length
+    })
+    const [level, changeLevel] = useState({
+        state: levelSet.levels[0].level,
+        goals: levelSet.levels[0].goalPos,
+        player: levelSet.levels[0].playerPos,
+        width: levelSet.levels[0].width,
+        height: levelSet.levels[0].height,
+        moves: 0,
+        gameWin: false,
+        gameOver: false
+    });
+    const [curr, changeCurr] = useState(0);
 
-    changeLevel(num) {
-        if(num >= this.state.numLevels || num < 0) return
-
-        let newLevel = {
-            tiles: this.state.levelData.original[num].level,
-            goalPos: this.state.levelData.original[num].goalPos,
-            playerPos: this.state.levelData.original[num].playerPos,
-            levelWidth: this.state.levelData.original[num].width,
-            levelHeight: this.state.levelData.original[num].height,
-            numMoves: 0,
-            gameOver: false,
-            gameWon: false
-        }
-
-        this.setState({
-            currLevel: num,
-            level: newLevel,
-            origState: newLevel
+    function setLevel(num) {
+        if(num < 0 || num >= levelSet.total) return;
+        changeLevel({
+            state: levelSet.levels[num].level,
+            goals: levelSet.levels[num].goalPos,
+            player: levelSet.levels[num].playerPos,
+            width: levelSet.levels[num].width,
+            height: levelSet.levels[num].height,
+            moves: 0,
+            gameWin: false,
+            gameOver: false
         })
+        changeCurr(num);
     }
 
-    nextLevel() {
-        const newLevel = this.state.currLevel + 1
-        this.changeLevel(newLevel)
+    function nextLevel() {
+        setLevel(curr + 1);
     }
 
-    prevLevel() {
-        const newLevel = this.state.currLevel - 1
-        this.changeLevel(newLevel)
+    function prevLevel() {
+        setLevel(curr - 1);
     }
 
-    resetLevel() {
-        this.setState({level: this.state.origState})
+    function resetLevel() {
+        setLevel(curr);
     }
 
-    isValidBoxMove(state, boxPos, modifier) {
-        if (state.tiles[boxPos + modifier] === ' ' || state.tiles[boxPos + modifier] === '.') {
-            return true
+    function isValidBoxMove(boxPos, mod) {
+        let tile = level.state[boxPos + mod];
+        if(tile === ' ' || tile === '.') return true;
+        else return false;
+    }
+
+    function isBoxStuck(state, boxPos) {
+        if ((state[boxPos - 1] === '#' || state[boxPos + 1] === '#') && 
+            (state[boxPos - level.width] === '#' || state[boxPos + level.width] === '#') &&
+            (state[boxPos] !== '*')) { console.log('stuck'); return true;  }
+        else return false;
+    }
+
+    function isGameWon(state) {
+        const result = level.goals.every(pos => state[pos] === '*');
+        if(result) setTimeout(() => nextLevel(), 3000);
+        return result;
+    }
+
+    function move(mod) {
+        let newLevel = {};
+        let newState = [...level.state];
+        const pos = level.player; //current player position
+        const newPos = level.player + mod;
+        if(newPos < 0 || newPos > level.state.length) return;
+        const tile = newState[pos]; //current tile type player is on
+        const newTile = newState[newPos]
+        if(newTile === '#') return;
+
+        else if(newTile === ' ') {
+            newState[newPos] = '@';
+            newState[pos] = (tile === '@' ? ' ' : '.');
         }
-        else return false
-    }
 
-    isBoxStuck(state, boxPos) {
+        else if(newTile === '.') {
+            newState[newPos] = '+';
+            newState[pos] = (tile === '@' ? ' ' : '.');
+        }
+
+        // '$' and '*'
+        else if((newTile === '$' || newTile ==='*') && isValidBoxMove(newPos, mod)) {
+            newState[pos] = (tile === '@' ? ' ' : '.');
+            newState[newPos] = (newTile === '$' ? '@' : '+');
+
+            const newBoxPos = newPos + mod;
+            const newBoxTile = newState[newBoxPos];
+            newState[newBoxPos] = (newBoxTile === ' ' ? '$' : '*');
+
+            newLevel = {
+                gameWin: isGameWon(newState),
+                gameOver: isBoxStuck(newState, newBoxPos)
+            }
+
+            if(isGameWon(newState)) console.log('won');
+            if(isBoxStuck(newState, newBoxPos)) console.log('lost')
+            
+        }
+
+        else return; //exit on unknown symbol
+
+
+        newLevel = {
+            ...level,
+            ...newLevel,
+            state: newState,
+            player: newPos,
+            moves: level.moves + 1
+        }
+        changeLevel(newLevel);
         
-        if ( (state.tiles[boxPos - 1] === '#' || state.tiles[boxPos + 1] === '#') && (state.tiles[boxPos - state.levelWidth] === '#' || state.tiles[boxPos + state.levelWidth] === '#') ) {
-            if (state.tiles[boxPos] === '*') return false
-            else return true
-        }
-        else return false
-    }
-
-    isGameWon(tiles, goalPos) {
-        const result = goalPos.every(pos => tiles[pos] === '*')
-        if (result) setTimeout(() => this.nextLevel(), 2000)
-        return result
-    }
-
-    move(state, modifier) {
-        let newState = {...state}
-        const currTile = state.tiles[state.playerPos]
-        const nextPos = state.playerPos + modifier
-        const nextTile = state.tiles[nextPos]
-
-        if(nextTile === '#') return
-
-        let newTiles = [...state.tiles]
         
-        if(nextTile === ' ') {
-            newTiles[nextPos] = '@'
-            if (currTile === '@') newTiles[state.playerPos] = ' '
-            else if (currTile === '+') newTiles[state.playerPos] = '.'
+    }
 
-            newState.tiles = newTiles
-            newState.playerPos = state.playerPos + modifier
-            newState.numMoves = state.numMoves + 1
+    function moveRight() {
+        move(1);
+    }
+    function moveLeft() {
+        move(-1);
+    }
+    function moveDown() {
+        move(level.width);
+    }
+    function moveUp() {
+        move(-level.width);
+    }
 
-            return {
-                level: newState
+    function handleKeyDown(e) {
+        if(e.repeat) return;
+        if(!level.gameOver && !level.gameWin) {
+            switch(e.key) {
+                case 'ArrowRight':
+                    moveRight();
+                    break;
+                case 'ArrowLeft':
+                    moveLeft();
+                    break;
+                case 'ArrowUp':
+                    moveUp();
+                    break;
+                case 'ArrowDown':
+                    moveDown();
+                    break;
             }
         }
 
-        else if(nextTile === '.') {
-            newTiles[nextPos] = '+'
-            if (currTile === '@') newTiles[state.playerPos] = ' '
-            else if (currTile === '+') newTiles[state.playerPos] = '.'
-
-            newState.tiles = newTiles
-            newState.playerPos = state.playerPos + modifier
-            newState.numMoves = state.numMoves + 1
-
-            return {
-                level: newState
-            }
-        }
-        
-        else if ((nextTile === '$' || nextTile === '*') && this.isValidBoxMove(state, state.playerPos + modifier, modifier)) {
-            if (currTile === '@') newTiles[state.playerPos] = ' '
-            else if (currTile === '+') newTiles[state.playerPos] = '.'
-
-            if (nextTile === '$') newTiles[state.playerPos + modifier] = '@'
-            else if (nextTile === '*') newTiles[state.playerPos + modifier] = '+'
-
-            const nextBoxPos = state.playerPos + modifier + modifier
-            const nextBoxTile = newTiles[nextBoxPos]
-
-            if(nextBoxTile === ' ') {
-                newTiles[nextBoxPos] = '$'
-
-            }
-            else if (nextBoxTile === '.') {
-                newTiles[nextBoxPos] = '*'
-            }
-            let newState =  {
-                tiles: newTiles,
-                goalPos: state.goalPos,
-                playerPos: state.playerPos + modifier,
-                levelWidth: state.levelWidth,
-                levelHeight: state.levelHeight,
-                numMoves: state.numMoves + 1,
-                gameWon: this.isGameWon(newTiles, state.goalPos)
-            }
-
-            newState.gameOver = this.isBoxStuck(newState, nextBoxPos)
-            return {level: newState}
+        switch(e.key) {
+            case 'r':
+                resetLevel();
+                break;
+            case 'e':
+                nextLevel();
+                break;
+            case 'q':
+                prevLevel();
+                break;
         }
     }
 
-    moveRight(state) {
-        return this.move(state, 1)
-    }
-
-    moveLeft(state) {
-        return this.move(state, -1)
-    }
-
-    moveUp(state) {
-        console.log(state.levelWidth)
-        return this.move(state, -state.levelWidth)
-    }
-
-    moveDown(state) {
-        return this.move(state, state.levelWidth)
-    }
-
-    handleKeyDown(e) {
-        if (!this.state.level.gameOver && !this.state.level.gameWon) {
-            if (e.key === 'ArrowRight') {
-                e.preventDefault();
-                this.setState(prevState => this.moveRight(prevState.level))
-            }
-            else if (e.key === 'ArrowLeft') {
-                e.preventDefault();
-                this.setState(prevState => this.moveLeft(prevState.level))
-            }
-            else if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                this.setState(prevState => this.moveUp(prevState.level))
-            }
-            else if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                this.setState(prevState => this.moveDown(prevState.level))
-            }
-        }
-
-        if(e.key === 'r' || e.key === 'R') {
-            this.resetLevel()
-        }
-
-        if(e.key === 'e') {
-            this.nextLevel()
-        }
-
-        if(e.key === 'q') {
-            this.prevLevel()
-        }
-    }
-
-    handleSwipe(e) {
+    function handleSwipe(e) {
         if (e.direction === 2) { //left swipe
-            this.setState(prevState => this.moveLeft(prevState.level))
+            moveLeft();
         }
 
         if (e.direction === 4) { //right swipe
-            this.setState(prevState => this.moveRight(prevState.level))
+            moveRight();
         }
 
         if (e.direction === 8) { //up swipe
-            this.setState(prevState => this.moveUp(prevState.level))
+            moveUp();
         }
 
         if (e.direction === 16) { //down swipe
-            this.setState(prevState => this.moveDown(prevState.level))
+            moveDown();
         }
     }
 
-    componentDidMount() {
-        document.addEventListener('keydown', this.handleKeyDown.bind(this))
-        this.setState({origState: {...this.state.level}})
-        
-    }
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyDown)
 
-    render() {
-        const newTiles = this.state.level.tiles.map((tile, index) => {
-            return <Tile key={index} tileType={tile} levelWidth={this.state.level.levelWidth} levelHeight={this.state.level.levelHeight}/>
-        })
-        document.documentElement.style.setProperty('--level-width', this.state.level.levelWidth)
-        document.documentElement.style.setProperty('--level-height', this.state.level.levelHeight)
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        }
+    })
 
-        return (
-            <div className='page-container'>
-                
+    return (
+        <div className='page-container'>
 
-                <div className='game-container'>
-                    {/*Stat container and level select*/}
-                    <div className='stat-container'>
-                        <p className='move-counter'>Moves: {this.state.level.numMoves}</p>
-                        <LevelSelect className='level-select' currLevel={this.state.currLevel} 
-                                        numLevels={this.state.numLevels} 
-                                        changeLevel={this.changeLevel.bind(this)} 
-                                        nextLevel={this.nextLevel.bind(this)} 
-                                        prevLevel={this.prevLevel.bind(this)}
-                        />
-                        <button className='reset' onClick={() => this.resetLevel()}>Reset</button>
-                    </div>
+            <div className='game-container'>
 
-                    {this.state.level.gameOver ? <p className='game-over'>Game Over! Press "Reset" to try again.</p> : null}
-                    {this.state.level.gameWon ? <p className='game-won'>Level Complete!</p> : null}
-
-                    {/*Game board*/}
-                    <Hammer onSwipe={event => this.handleSwipe(event)} direction='DIRECTION_ALL'>
-                        <div className='level-container'>
-                            <div className='level-grid'>
-                                {newTiles}
-                            </div>
-                        </div>
-                            
-                    </Hammer>
-
-                    <header>
-                        <p>Sokoban</p>
-                    </header>
-
-                    <div className='desc-container'>
-                        Objective: Push all the boxes into the goals<br/><br/>
-                        Controls<br/>
-                        Move: Arrow Keys or Swipe<br/>
-                        Restart: R<br/><br/>
-                    </div>
-                    
+                <div className='stat-container'>
+                    <p className='move-counter'>Moves: {level.moves}</p>
+                    <LevelSelect className='level-select' 
+                                    currLevel={curr} 
+                                    numLevels={levelSet.total} 
+                                    changeLevel={setLevel} 
+                                    nextLevel={nextLevel} 
+                                    prevLevel={prevLevel}
+                    />
+                    <button className='reset' onClick={resetLevel}>Reset</button>
                 </div>
 
-                <Footer />
+                {level.gameOver ? <p className='game-over'>Game Over! Press "Reset" to try again.</p> : null}
+                {level.gameWin ? <p className='game-won'>Level Complete!</p> : null}
+
+                {/*Game board*/}
+                <Hammer onSwipe={handleSwipe} direction='DIRECTION_ALL'>
+                    <div className='level-container'>
+                        <TileBoard state={level.state} width={level.width} height={level.height} />
+                    </div>
+                </Hammer> 
+
+                <header>
+                    <p>Sokoban</p>
+                </header>
+
+                <div className='desc-container'>
+                    Objective: Push all the boxes into the goals<br/><br/>
+                    Controls<br/>
+                    Move: Arrow Keys or Swipe<br/>
+                    Restart: R<br/><br/>
+                </div>
+                
             </div>
-        )
-    }
+
+            <Footer />
+        </div>
+    )
 }
 
 export default Level
