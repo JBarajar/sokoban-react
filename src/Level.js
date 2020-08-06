@@ -9,10 +9,14 @@ import Footer from './Footer.js'
 import * as data from './levels'
 
 function Level() {
-    const [levelSet, changeLevelSet] = useState({
+    const levelSet = {
         levels: data.original,
         total: data.original.length
-    })
+    }
+    /*const [levelSet, changeLevelSet] = useState({
+        levels: data.original,
+        total: data.original.length
+    })*/
     const [level, changeLevel] = useState({
         state: levelSet.levels[0].level,
         goals: levelSet.levels[0].goalPos,
