@@ -154,6 +154,8 @@ function Level() {
                 case 'ArrowDown':
                     moveDown();
                     break;
+                default:
+                    break;
             }
         }
 
@@ -166,6 +168,8 @@ function Level() {
                 break;
             case 'q':
                 prevLevel();
+                break;
+            default:
                 break;
         }
     }
