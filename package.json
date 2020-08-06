@@ -1,5 +1,5 @@
 {
-  "homepage": "http://jbarajar.github.io/sokoban-react",
+  "homepage": "/",
   "name": "sokoban-react",
   "version": "0.1.0",
   "private": true,
@@ -15,7 +15,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": ""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -32,7 +32,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "gh-pages": "^2.2.0"
-  }
+  "devDependencies": {}
 }
