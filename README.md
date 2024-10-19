@@ -1,3 +1,3 @@
 # Sokoban React
 
-<a href="https://jbarajar.github.io/sokoban-react/"><strong>Play Here!</strong></a>
+<a href="sokoban-jbarajar.netlify.app/"><strong>Play Here!</strong></a>
